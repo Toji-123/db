@@ -1,0 +1,50 @@
+# Graph Coloring Problem using Backtracking
+
+def is_safe(node, graph, colors, color):
+    for neighbor in range(len(graph)):
+        # If neighbor is connected and has the same color -> not safe
+        if graph[node][neighbor] == 1 and colors[neighbor] == color:
+            return False
+    return True
+
+
+def solve_coloring(node, graph, m, colors, n):
+    if node == n:   # all vertices are colored
+        return True
+
+    # try assigning each color (1 to m)
+    for color in range(1, m + 1):
+        if is_safe(node, graph, colors, color):
+            colors[node] = color  # assign color
+
+            # Recursively assign color to next vertex
+            if solve_coloring(node + 1, graph, m, colors, n):
+                return True
+
+            # Backtrack
+            colors[node] = 0
+
+    return False
+
+
+# ---- MAIN ----
+if __name__ == "__main__":
+    # Example Undirected Graph (Adjacency Matrix)
+    graph = [
+        [0,1,1,0],
+        [1,0,1,1],
+        [1,1,0,1],
+        [0,1,1,0]
+    ]
+
+    n = len(graph)
+    m = int(input("Enter number of colors: "))
+
+    colors = [0] * n
+
+    if solve_coloring(0, graph, m, colors, n):
+        print("\nColoring Possible!")
+        for i in range(n):
+            print(f"Vertex {i} ---> Color {colors[i]}")
+    else:
+        print("\nNo valid coloring exists using", m, "colors.")

@@ -1,0 +1,59 @@
+BFS Algorithm (Recursive) – Python Program
+-----------------------------------------------------------------------------------
+from collections import deque
+
+# Recursive BFS Function
+def bfs(queue, graph, visited):
+    if not queue:
+        return
+    
+    node = queue.popleft()     # Remove first element from queue
+    print(node, end=" ")
+    visited.add(node)
+
+    for neighbour in graph[node]:
+        if neighbour not in visited:
+            queue.append(neighbour)
+    
+    bfs(queue, graph, visited)   # Recursive Call
+
+
+# Main Code
+graph = {}
+
+# Input number of vertices
+n = int(input("Enter number of vertices: "))
+
+# Taking graph input
+for i in range(n):
+    vertex = input(f"Enter vertex {i+1}: ")
+    neighbours = input(f"Enter neighbours of {vertex} (space separated): ").split()
+    graph[vertex] = neighbours
+
+start = input("Enter starting node for BFS: ")
+
+visited = set()
+queue = deque([start])   # Initialize queue with start node
+
+print("\nBFS Traversal:")
+bfs(queue, graph, visited)
+---------------------------------------------------------------------------------------
+📝 Sample Input
+Enter number of vertices: 6
+Enter vertex 1: A
+Enter neighbours of A (space separated): B C
+Enter vertex 2: B
+Enter neighbours of B (space separated): A D E
+Enter vertex 3: C
+Enter neighbours of C (space separated): A F
+Enter vertex 4: D
+Enter neighbours of D (space separated): B
+Enter vertex 5: E
+Enter neighbours of E (space separated): B F
+Enter vertex 6: F
+Enter neighbours of F (space separated): C E
+Enter starting node for BFS: A
+
+✅ Output:
+BFS Traversal:
+A B C D E F

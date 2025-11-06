@@ -1,0 +1,35 @@
+# N Queen using Branch and Bound
+
+def print_board(board, n):
+    for i in range(n):
+        for j in range(n):
+            print(board[i][j], end=" ")
+        print()
+    print()
+
+def solve_nqueen(n, row, col_flag, left_diag, right_diag, board):
+    if row == n:
+        print_board(board, n)
+        return
+
+    for col in range(n):
+        if (not col_flag[col] and 
+            not left_diag[row - col + n - 1] and 
+            not right_diag[row + col]):
+            
+            board[row][col] = 1
+            col_flag[col] = left_diag[row - col + n - 1] = right_diag[row + col] = True
+
+            solve_nqueen(n, row + 1, col_flag, left_diag, right_diag, board)
+
+            # backtrack
+            board[row][col] = 0
+            col_flag[col] = left_diag[row - col + n - 1] = right_diag[row + col] = False
+
+# ---- MAIN ----
+n = int(input("Enter number of queens: "))
+board = [[0]*n for _ in range(n)]
+col_flag = [False]*n
+left_diag = [False]*(2*n - 1)
+right_diag = [False]*(2*n - 1)
+solve_nqueen(n, 0, col_flag, left_diag, right_diag, board)

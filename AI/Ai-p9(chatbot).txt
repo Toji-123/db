@@ -1,0 +1,50 @@
+# Elementary Chatbot for Customer Interaction Application
+# Developed by: (Your Name)
+# Language: Python
+
+def chatbot_reply(user_input):
+    """Function to generate chatbot reply based on user input"""
+    user_input = user_input.lower()
+
+    if "hello" in user_input or "hi" in user_input:
+        return "Hello! Welcome to our Customer Support. How may I assist you?"
+    elif "order" in user_input and "status" in user_input:
+        return "Please provide your order ID to check the order status."
+    elif "return" in user_input or "refund" in user_input:
+        return "Sure! Please share your order ID to start the return or refund process."
+    elif "product" in user_input or "item" in user_input:
+        return "Can you please specify the product name or model number?"
+    elif "price" in user_input or "cost" in user_input:
+        return "Please tell me the product name to fetch its price details."
+    elif "help" in user_input or "support" in user_input:
+        return "I can help you with order status, returns, refunds, and product prices."
+    elif "thank" in user_input:
+        return "You're welcome! Is there anything else I can help you with?"
+    elif "bye" in user_input or "exit" in user_input:
+        return "Thank you for chatting with us. Have a great day!"
+    else:
+        return "I'm sorry, I didn't understand that. Could you please rephrase?"
+
+def chat_bot():
+    """Main chat loop"""
+    print("==========================================")
+    print("      CUSTOMER SERVICE CHAT BOT")
+    print("==========================================")
+    print("Type 'bye' or 'exit' to end the chat.")
+    print("------------------------------------------")
+
+    while True:
+        user_input = input("You: ")
+
+        if user_input.lower() in ["bye", "exit"]:
+            print("Bot: Thank you for chatting with us. Goodbye!")
+            break
+
+        reply = chatbot_reply(user_input)
+        print("Bot:", reply)
+        print("------------------------------------------")
+
+
+# ---- MAIN PROGRAM ----
+if __name__ == "__main__":
+    chat_bot()
