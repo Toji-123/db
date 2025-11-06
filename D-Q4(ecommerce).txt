@@ -1,0 +1,85 @@
+Design and develop SQL DDL and DML statements for the E-commerce database to manage products, customers, and orders for an online store.
+Also execute queries for following:
+1.	Find customers who ordered the product “Laptop.”
+2.	List products from highest to lowest price.
+3.	Display categories with sales above ₹50,000.
+4.	Show total sales per category.
+5.	Update product prices by +10%.
+
+
+CREATE TABLE Customer (
+    cust_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    city VARCHAR(30)
+);
+
+CREATE TABLE Product (
+    prod_id INT PRIMARY KEY,
+    prod_name VARCHAR(50),
+    category VARCHAR(30),
+    price DECIMAL(10,2)
+);
+
+CREATE TABLE Orders (
+    order_id INT PRIMARY KEY,
+    cust_id INT,
+    order_date DATE,
+    FOREIGN KEY (cust_id) REFERENCES Customer(cust_id)
+);
+
+CREATE TABLE Order_Details (
+    order_id INT,
+    prod_id INT,
+    quantity INT,
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (prod_id) REFERENCES Product(prod_id)
+);
+
+
+INSERT INTO Customer VALUES
+(1,'Amit','Mumbai'),
+(2,'Riya','Delhi'),
+(3,'John','Pune');
+
+INSERT INTO Product VALUES
+(101,'Laptop','Electronics',50000),
+(102,'Mouse','Electronics',500),
+(103,'Shoes','Fashion',2000);
+
+INSERT INTO Orders VALUES
+(1001,1,'2025-01-01'),
+(1002,2,'2025-01-03');
+
+INSERT INTO Order_Details VALUES
+(1001,101,1),
+(1001,102,2),
+(1002,103,1);
+
+1) Find customers who ordered the product “Laptop.”
+SELECT DISTINCT c.name
+FROM Customer c
+JOIN Orders o ON c.cust_id = o.cust_id
+JOIN Order_Details od ON o.order_id = od.order_id
+JOIN Product p ON od.prod_id = p.prod_id
+WHERE p.prod_name = 'Laptop';
+
+2) List products from highest to lowest price.
+SELECT * FROM Product
+ORDER BY price DESC;
+
+3) Display categories with sales above ₹50,000.
+SELECT p.category, SUM(p.price * od.quantity) AS total_sales
+FROM Product p
+JOIN Order_Details od ON p.prod_id = od.prod_id
+GROUP BY p.category
+HAVING SUM(p.price * od.quantity) > 50000;
+
+4) Show total sales per category.
+SELECT p.category, SUM(p.price * od.quantity) AS total_sales
+FROM Product p
+JOIN Order_Details od ON p.prod_id = od.prod_id
+GROUP BY p.category;
+
+5) Update product prices by +10%.
+UPDATE Product
+SET price = price * 1.10;

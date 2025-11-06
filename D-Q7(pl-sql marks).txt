@@ -1,0 +1,41 @@
+Write a PL/SQL block that accepts marks (out of 100) and prints:
+“Distinction” if marks ≥ 75
+“First Class” if 60–74
+“Second Class” if 50–59
+“Fail” otherwise.
+Handle invalid marks (e.g., <0 or >100).
+
+
+DECLARE
+    marks NUMBER;
+BEGIN
+    -- Accept input
+    marks := &marks;
+
+    -- Check for invalid marks
+    IF marks < 0 OR marks > 100 THEN
+        DBMS_OUTPUT.PUT_LINE('Invalid Marks! Please enter value between 0 and 100.');
+
+    ELSIF marks >= 75 THEN
+        DBMS_OUTPUT.PUT_LINE('Distinction');
+
+    ELSIF marks >= 60 THEN
+        DBMS_OUTPUT.PUT_LINE('First Class');
+
+    ELSIF marks >= 50 THEN
+        DBMS_OUTPUT.PUT_LINE('Second Class');
+
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Fail');
+    END IF;
+
+END;
+/
+
+---------------------------------
+Before running, enable output:
+
+SET SERVEROUTPUT ON;
+
+
+Then run the PL/SQL block.

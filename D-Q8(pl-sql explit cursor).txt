@@ -1,0 +1,32 @@
+Write a PL/SQL block using an explicit cursor to display all students enrolled in the “Computer Science” department, one by one.
+
+--make a table ------------
+Student( roll_no, name, department )
+
+
+
+pL/SQL Block (Write This in Practical)
+SET SERVEROUTPUT ON;
+
+DECLARE
+    -- Declare cursor
+    CURSOR stu_cur IS
+        SELECT roll_no, name
+        FROM Student
+        WHERE department = 'Computer Science';
+
+    v_roll Student.roll_no%TYPE;
+    v_name Student.name%TYPE;
+BEGIN
+    OPEN stu_cur;     -- Open cursor
+
+    LOOP
+        FETCH stu_cur INTO v_roll, v_name; -- Fetch row into variables
+        EXIT WHEN stu_cur%NOTFOUND;       -- Exit when no more rows
+
+        DBMS_OUTPUT.PUT_LINE('Roll No: ' || v_roll || '  Name: ' || v_name);
+    END LOOP;
+
+    CLOSE stu_cur;    -- Always close cursor
+END;
+/

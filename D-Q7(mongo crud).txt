@@ -1,0 +1,84 @@
+Design and Develop MongoDB Queries using CRUD operations. (Use CRUD operations, SAVE method, logical operators)
+
+use collegeDB
+
+-----CREATE----------
+INSERT ONE 
+db.students.insertOne({
+  roll: 1,
+  name: "Amit",
+  age: 20,
+  city: "Mumbai"
+});
+
+
+Insert Many
+db.students.insertMany([
+  { roll: 2, name: "Riya", age: 22, city: "Delhi" },
+  { roll: 3, name: "John", age: 21, city: "Pune" }
+]);
+--------------------------------------------------------
+R — Read (Find Records)
+Show all
+db.students.find();
+
+Show specific fields only
+db.students.find({}, { name: 1, city: 1 });
+
+Find with condition
+db.students.find({ city: "Mumbai" });
+---------------------------------------------
+U — Update Records
+Update One Field
+db.students.updateOne(
+  { roll: 1 },
+  { $set: { city: "Goa" } }
+);
+
+Update Many
+db.students.updateMany(
+  { city: "Delhi" },
+  { $set: { city: "New Delhi" } }
+);
+----------------------------------------------------------
+D — Delete Records
+Delete One
+db.students.deleteOne({ roll: 3 });
+
+Delete Many
+db.students.deleteMany({ city: "Mumbai" });
+---------------------------------------------------
+
+SAVE Method (Insert if not exists, Update if exists)
+db.students.save({
+  roll: 2,
+  name: "Riya Sharma",
+  age: 23,
+  city: "New Delhi"
+});
+
+
+###If roll: 2 exists → record gets updated.
+####If roll: 2 doesn’t exist → it inserts new one.
+--------------------------------------------------------
+
+Logical Operators
+$and
+db.students.find({
+  $and: [{ age: { $gt: 20 } }, { city: "Pune" }]
+});
+
+$or
+db.students.find({
+  $or: [{ city: "Goa" }, { city: "Mumbai" }]
+});
+
+$not
+db.students.find({
+  age: { $not: { $lt: 21 } }
+});
+
+$in
+db.students.find({
+  city: { $in: ["Pune", "Goa"] }
+});

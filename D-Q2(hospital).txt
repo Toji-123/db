@@ -1,0 +1,69 @@
+2. 3Design and develop SQL DDL and DML statements to build a database for a hospital to manage doctors, patients, and appointments. Also execute queries for following: 1. Count how many patients each doctor has seen. 2. List patients by age descending. 3. Find doctors who have more than 3 appointments. 4. Find patients who have appointments with “Dr. Mehta.” 5. Delete appointments of patients older than 60.
+
+CREATE TABLE Doctor (
+    doctor_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    specialization VARCHAR(50)
+);
+
+CREATE TABLE Patient (
+    patient_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT
+);
+
+CREATE TABLE Appointment (
+    appoint_id INT PRIMARY KEY,
+    doctor_id INT,
+    patient_id INT,
+    appoint_date DATE,
+    FOREIGN KEY (doctor_id) REFERENCES Doctor(doctor_id),
+    FOREIGN KEY (patient_id) REFERENCES Patient(patient_id)
+);
+
+
+INSERT INTO Doctor VALUES
+(1,'Dr. Mehta','Cardiology'),
+(2,'Dr. Shah','Dermatology'),
+(3,'Dr. Rao','Orthopedic');
+
+INSERT INTO Patient VALUES
+(101,'Amit',25),
+(102,'Neha',45),
+(103,'Rohan',62),
+(104,'Sara',30);
+
+INSERT INTO Appointment VALUES
+(1001,1,101,'2025-01-01'),
+(1002,1,102,'2025-01-03'),
+(1003,1,103,'2025-01-06'),
+(1004,2,104,'2025-01-05');
+
+1) Count how many patients each doctor has seen
+SELECT doctor_id, COUNT(patient_id) AS total_patients
+FROM Appointment
+GROUP BY doctor_id;
+
+2) List patients by age descending
+SELECT * FROM Patient
+ORDER BY age DESC;
+
+3) Find doctors who have more than 3 appointments
+SELECT doctor_id, COUNT(*) AS appoint_count
+FROM Appointment
+GROUP BY doctor_id
+HAVING COUNT(*) > 3;
+
+4) Find patients who have appointments with “Dr. Mehta.”
+SELECT p.name
+FROM Patient p
+JOIN Appointment a ON p.patient_id = a.patient_id
+JOIN Doctor d ON a.doctor_id = d.doctor_id
+WHERE d.name = 'Dr. Mehta';
+
+5) Delete appointments of patients older than 60
+DELETE FROM Appointment
+WHERE patient_id IN (
+    SELECT patient_id FROM Patient WHERE age > 60
+);
+

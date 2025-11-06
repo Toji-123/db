@@ -1,0 +1,81 @@
+Design and develop SQL DDL and DML statements for the Hotel Reservation System to manage hotels, rooms, and reservations.
+Also execute queries for following:
+1.	Show hotels with more than 3 rooms booked.
+2.	List rooms by price descending.
+3.	Find number of rooms booked per hotel.
+4.	Find guests staying in the most expensive hotel.
+5.	List all available rooms in “Goa.”
+
+
+CREATE TABLE Hotel (
+    hotel_id INT PRIMARY KEY,
+    hotel_name VARCHAR(50),
+    city VARCHAR(30)
+);
+
+CREATE TABLE Room (
+    room_id INT PRIMARY KEY,
+    hotel_id INT,
+    price DECIMAL(10,2),
+    is_available CHAR(1),   -- 'Y' or 'N'
+    FOREIGN KEY (hotel_id) REFERENCES Hotel(hotel_id)
+);
+
+CREATE TABLE Reservation (
+    res_id INT PRIMARY KEY,
+    room_id INT,
+    guest_name VARCHAR(50),
+    check_in DATE,
+    check_out DATE,
+    FOREIGN KEY (room_id) REFERENCES Room(room_id)
+);
+
+INSERT INTO Hotel VALUES
+(1, 'Sea View', 'Goa'),
+(2, 'Grand Palace', 'Mumbai'),
+(3, 'Hill Resort', 'Manali');
+
+INSERT INTO Room VALUES
+(101, 1, 3000, 'N'),
+(102, 1, 4500, 'Y'),
+(103, 1, 6000, 'N'),
+(201, 2, 7000, 'Y'),
+(202, 2, 5500, 'N'),
+(301, 3, 8000, 'Y');
+
+INSERT INTO Reservation VALUES
+(1001, 101, 'Amit', '2025-01-01', '2025-01-05'),
+(1002, 103, 'Riya', '2025-01-02', '2025-01-06'),
+(1003, 202, 'John', '2025-01-10', '2025-01-15');
+
+1) Show hotels with more than 3 rooms booked.
+SELECT h.hotel_name, COUNT(r.room_id) AS booked_rooms
+FROM Hotel h
+JOIN Room r ON h.hotel_id = r.hotel_id
+JOIN Reservation rv ON r.room_id = rv.room_id
+GROUP BY h.hotel_name
+HAVING COUNT(r.room_id) > 3;
+
+2) List rooms by price descending.
+SELECT * FROM Room
+ORDER BY price DESC;
+
+3) Find number of rooms booked per hotel.
+SELECT h.hotel_name, COUNT(rv.room_id) AS rooms_booked
+FROM Hotel h
+JOIN Room r ON h.hotel_id = r.hotel_id
+JOIN Reservation rv ON r.room_id = rv.room_id
+GROUP BY h.hotel_name;
+
+4) Find guests staying in the most expensive hotel.
+SELECT rv.guest_name, h.hotel_name
+FROM Reservation rv
+JOIN Room r ON rv.room_id = r.room_id
+JOIN Hotel h ON r.hotel_id = h.hotel_id
+WHERE r.price = (SELECT MAX(price) FROM Room);
+
+5) List all available rooms in “Goa.”
+SELECT r.room_id, r.price
+FROM Room r
+JOIN Hotel h ON r.hotel_id = h.hotel_id
+WHERE h.city = 'Goa' AND r.is_available = 'Y';
